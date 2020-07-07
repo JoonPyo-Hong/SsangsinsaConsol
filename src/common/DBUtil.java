@@ -14,7 +14,7 @@ import java.sql.DriverManager;
  *
  */
 public class DBUtil {
-	public static Connection open() {
+	public Connection open() {
 
 	      Connection conn = null;
 	      String url = "jdbc:oracle:thin:@ssangsinsa.c7oset28told.ap-northeast-2.rds.amazonaws.com:1521:orcl";
