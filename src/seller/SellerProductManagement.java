@@ -84,7 +84,7 @@ public class SellerProductManagement { // 1. 상품관리
 				String sql = "SELECT SUP.SEQ, P.NAME, SL.QUANTITY, S.SALEDDATE, SUP.REGDATE, SUP.TYPE, SUP.REASON, S.SEQ AS SALESEQ "
 						+ "FROM TBL_SUPPORT SUP INNER JOIN TBL_SALE S ON SUP.TBL_SALE_SEQ = S.SEQ INNER JOIN TBL_SALELIST SL "
 						+ "ON S.SEQ = SL.TBL_SALE_SEQ INNER JOIN TBL_PRODUCT P ON SL.TBL_PRODUCT_SEQ = P.SEQ "
-						+ "WHERE P.TBL_COMPANY_SEQ = ? AND SUP.DELFLAG = 0 ORDER BY SUP.REGDATE";
+						+ "WHERE P.TBL_COMPANY_SEQ = ? AND SUP.DELFLAG = 1 ORDER BY SUP.REGDATE";
 				
 				pstat = conn.prepareStatement(sql);
 				
@@ -113,14 +113,14 @@ public class SellerProductManagement { // 1. 상품관리
 				System.out.print("번호 : ");
 				String num = scan.nextLine();
 				
-				sql = "UPDATE TBL_SUPPORT SET DELFLAG = 1 WHERE SEQ = ? AND TBL_SALE_SEQ = ?";
+				sql = "UPDATE TBL_SUPPORT SET DELFLAG = 0 WHERE SEQ = ? AND TBL_SALE_SEQ = ?";
 				
 				pstat = conn.prepareStatement(sql);
 				
 				pstat.setString(1, num);
 				pstat.setString(2, map.get(num));
 				
-//				pstat.executeQuery();
+				pstat.executeQuery();
 				
 				System.out.printf("\n%s번 상품이 교환 / 반품 처리되었습니다.\n\n", num);
 				
@@ -164,7 +164,7 @@ public class SellerProductManagement { // 1. 상품관리
 				pstat.setString(1, num);
 				pstat.setString(2, seller.getSeq());
 				
-//				pstat.executeQuery();
+				pstat.executeQuery();
 				
 				System.out.printf("\n%s번 상품이 삭제되었습니다.\n\n", num);
 				
@@ -216,7 +216,7 @@ public class SellerProductManagement { // 1. 상품관리
 				pstat.setString(3, num);
 				pstat.setString(4, seller.getSeq());
 				
-//				pstat.executeQuery();
+				pstat.executeQuery();
 				
 				System.out.printf("\n%s번 상품이 수정되었습니다.\n\n", num);
 				
@@ -277,7 +277,7 @@ public class SellerProductManagement { // 1. 상품관리
 						pstat.setString(2, productPrice);
 						pstat.setString(3, seller.getSeq());
 						
-//						pstat.executeQuery();
+						pstat.executeQuery();
 						
 						System.out.println("\n상품이 등록되었습니다.\n");
 						
@@ -322,7 +322,7 @@ public class SellerProductManagement { // 1. 상품관리
 						pstat.setString(2, size.toUpperCase());
 						pstat.setString(3, quantity);
 						
-//						pstat.executeQuery();
+						pstat.executeQuery();
 						
 						System.out.println("\n상품이 등록되었습니다.\n");
 						
@@ -366,7 +366,7 @@ public class SellerProductManagement { // 1. 상품관리
 	
 				//로그인 한 판매자 번호를 포린키로 가지는 모든 상품 출력
 				String sql = "SELECT P.SEQ, P.NAME, P.PRICE, P.REGDATE, P.IMAGE_PATH, PD.PRODUCT_SIZE, PD.QUANTITY "
-						+ "FROM TBL_PRODUCT P INNER JOIN TBL_PRODUCT_DETAIL PD ON P.SEQ=PD.TBL_PRODUCT_SEQ WHERE P.TBL_COMPANY_SEQ = ?";
+						+ "FROM TBL_PRODUCT P INNER JOIN TBL_PRODUCT_DETAIL PD ON P.SEQ=PD.TBL_PRODUCT_SEQ WHERE P.DELFLAG = 1 AND P.TBL_COMPANY_SEQ = ?";
 				
 				pstat = conn.prepareStatement(sql);
 				
