@@ -3,6 +3,7 @@ package seller;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -71,7 +72,7 @@ public class SellerProductManagement { // 1. 상품관리
 	
 	
 	
-	private void afterService(SellerUser seller) { // 교환/반품
+	private void afterService(SellerUser seller) { // 교환/반품 ---------완료 제어할게 DELFLAG 밖에 없어요
 		
 		while (true) {
 		
@@ -84,11 +85,11 @@ public class SellerProductManagement { // 1. 상품관리
 				String sql = "SELECT SUP.SEQ, P.NAME, SL.QUANTITY, S.SALEDDATE, SUP.REGDATE, SUP.TYPE, SUP.REASON, S.SEQ AS SALESEQ "
 						+ "FROM TBL_SUPPORT SUP INNER JOIN TBL_SALE S ON SUP.TBL_SALE_SEQ = S.SEQ INNER JOIN TBL_SALELIST SL "
 						+ "ON S.SEQ = SL.TBL_SALE_SEQ INNER JOIN TBL_PRODUCT P ON SL.TBL_PRODUCT_SEQ = P.SEQ "
-						+ "WHERE P.TBL_COMPANY_SEQ = ? AND SUP.DELFLAG = 1 ORDER BY SUP.REGDATE";
+						+ "WHERE P.TBL_COMPANY_SEQ = ? AND SUP.DELFLAG = 0 ORDER BY SUP.REGDATE";
 				
 				pstat = conn.prepareStatement(sql);
 				
-				pstat.setString(1, seller.getSeq());
+				pstat.setInt(1, seller.getSeq());
 				
 				rs = pstat.executeQuery();
 				
@@ -113,7 +114,7 @@ public class SellerProductManagement { // 1. 상품관리
 				System.out.print("번호 : ");
 				String num = scan.nextLine();
 				
-				sql = "UPDATE TBL_SUPPORT SET DELFLAG = 0 WHERE SEQ = ? AND TBL_SALE_SEQ = ?";
+				sql = "UPDATE TBL_SUPPORT SET DELFLAG = 1 WHERE SEQ = ? AND TBL_SALE_SEQ = ?";
 				
 				pstat = conn.prepareStatement(sql);
 				
@@ -162,7 +163,7 @@ public class SellerProductManagement { // 1. 상품관리
 				pstat = conn.prepareStatement(sql);
 				
 				pstat.setString(1, num);
-				pstat.setString(2, seller.getSeq());
+				pstat.setInt(2, seller.getSeq());
 				
 				pstat.executeQuery();
 				
@@ -196,7 +197,7 @@ public class SellerProductManagement { // 1. 상품관리
 				
 				System.out.println("수정할 상품의 번호를 입력해 주세요.");
 				
-				String sql = "UPDATE TBL_PRODUCT SET NAME = ?, PRICE = ? WHERE SEQ = ? AND TBL_COMPANY_SEQ = ? AND DELFLAG = 1";
+				String sql = "UPDATE TBL_PRODUCT SET NAME = ?, PRICE = ? WHERE SEQ = ? AND TBL_COMPANY_SEQ = ? AND DELFLAG = 0";
 				
 				System.out.print("번호 : ");
 				String num = scan.nextLine();
@@ -214,7 +215,7 @@ public class SellerProductManagement { // 1. 상품관리
 				pstat.setString(1, productName);
 				pstat.setString(2, productPrice);
 				pstat.setString(3, num);
-				pstat.setString(4, seller.getSeq());
+				pstat.setInt(4, seller.getSeq());
 				
 				pstat.executeQuery();
 				
@@ -263,7 +264,7 @@ public class SellerProductManagement { // 1. 상품관리
 						System.out.println("등록할 상품의 정보를 입력해 주세요.");
 						
 						String sql = "INSERT INTO TBL_PRODUCT (SEQ, NAME, PRICE, TBL_COMPANY_SEQ, REGDATE, IMAGE_PATH, DELFLAG) "
-								+ "VALUES (TBL__PRODUCT_SEQ.NEXTVAL, ?, ?, ?, SYSDATE, NULL, 1)";
+								+ "VALUES (TBL__PRODUCT_SEQ.NEXTVAL, ?, ?, ?, SYSDATE, NULL, DEFAULT)";
 						
 						System.out.print("상품명 : ");
 						String productName = scan.nextLine();
@@ -275,7 +276,7 @@ public class SellerProductManagement { // 1. 상품관리
 						
 						pstat.setString(1, productName);
 						pstat.setString(2, productPrice);
-						pstat.setString(3, seller.getSeq());
+						pstat.setInt(3, seller.getSeq());
 						
 						pstat.executeQuery();
 						
@@ -303,7 +304,7 @@ public class SellerProductManagement { // 1. 상품관리
 						System.out.println("등록할 상품의 번호를 입력해 주세요.");
 						
 						String sql = "INSERT INTO TBL_PRODUCT_DETAIL (TBL_PRODUCT_SEQ, PRODUCT_SIZE, QUANTITY, DELFLAG) "
-								+ "VALUES (?, ?, ?, 1)";
+								+ "VALUES (?, ?, ?, DEFAULT)";
 						
 						System.out.print("번호 : ");
 						String num = scan.nextLine();
@@ -366,11 +367,12 @@ public class SellerProductManagement { // 1. 상품관리
 	
 				//로그인 한 판매자 번호를 포린키로 가지는 모든 상품 출력
 				String sql = "SELECT P.SEQ, P.NAME, P.PRICE, P.REGDATE, P.IMAGE_PATH, PD.PRODUCT_SIZE, PD.QUANTITY "
-						+ "FROM TBL_PRODUCT P INNER JOIN TBL_PRODUCT_DETAIL PD ON P.SEQ=PD.TBL_PRODUCT_SEQ WHERE P.DELFLAG = 1 AND P.TBL_COMPANY_SEQ = ?";
+						+ "FROM TBL_PRODUCT P INNER JOIN TBL_PRODUCT_DETAIL PD ON P.SEQ=PD.TBL_PRODUCT_SEQ "
+						+ "WHERE P.DELFLAG = 0 AND P.TBL_COMPANY_SEQ = ?";
 				
 				pstat = conn.prepareStatement(sql);
 				
-				pstat.setString(1, seller.getSeq());
+				pstat.setInt(1, seller.getSeq());
 				
 				rs = pstat.executeQuery();
 				

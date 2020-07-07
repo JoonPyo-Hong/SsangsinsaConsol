@@ -2,19 +2,19 @@ package seller;
 
 public class SellerUser {
 	
-	private String seq; //primary key
+	private int seq; //primary key
 	private String companyName; //상호명
 	private String pwd; //비밀번호
 	private String address; //주소
 	private String owner; //법인명
 	private String tel; //전화번호
-	private String companyNum; //사업자번호
+	private long companyNum; //사업자번호
 	
 	
-	public String getSeq() {
+	public int getSeq() {
 		return seq;
 	}
-	public void setSeq(String seq) {
+	public void setSeq(int seq) {
 		this.seq = seq;
 	}
 	
@@ -53,10 +53,10 @@ public class SellerUser {
 		this.tel = tel;
 	}
 	
-	public String getCompanyNum() {
+	public long getCompanyNum() {
 		return companyNum;
 	}
-	public void setCompanyNum(String companyNum) {
+	public void setCompanyNum(long companyNum) {
 		this.companyNum = companyNum;
 	}
 
