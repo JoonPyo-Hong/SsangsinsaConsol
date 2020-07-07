@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Scanner;
 
+import common.DBUtil;
+
 public class SellerReviewManagement { // 2. 리뷰관리
 	
 	Connection conn = null;

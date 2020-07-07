@@ -1,4 +1,4 @@
-package Admin;
+package admin;
 //관리자 객체
 public class AdminUser {
 private int seq; 	//번호

@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+import common.DBUtil;
+
 public class SellerProductManagement { // 1. 상품관리
 	
 	Connection conn = null;

@@ -1,9 +1,11 @@
-package Admin;
+package admin;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
+
+import common.DBUtil;
 
 //관리자 로그인
 public class AdminLogin {
