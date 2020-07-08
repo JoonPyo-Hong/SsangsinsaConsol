@@ -72,7 +72,7 @@ public class SellerProductManagement { // 1. 상품관리
 	
 	
 	
-	private void afterService(SellerUser seller) { // 교환/반품 ---------완료 제어할게 DELFLAG 밖에 없어요
+	private void afterService(SellerUser seller) { // 교환/반품
 		
 		while (true) {
 		
@@ -114,11 +114,11 @@ public class SellerProductManagement { // 1. 상품관리
 				System.out.print("번호 : ");
 				String num = scan.nextLine();
 				
-				sql = "UPDATE TBL_SUPPORT SET DELFLAG = 1 WHERE SEQ = ? AND TBL_SALE_SEQ = ?";
+				sql = "UPDATE TBL_DELIVERY_LIST SET STATUS = ? WHERE DELFLAG = 0 AND TBL_SALE_SEQ = ?";
 				
 				pstat = conn.prepareStatement(sql);
 				
-				pstat.setString(1, num);
+				pstat.setString(1, "배송완료");
 				pstat.setString(2, map.get(num));
 				
 				pstat.executeQuery();
@@ -154,7 +154,7 @@ public class SellerProductManagement { // 1. 상품관리
 				
 				System.out.println("삭제할 상품의 번호를 입력해 주세요.");
 				
-				String sql = "UPDATE TBL_PRODUCT SET DELFLAG = 0 "
+				String sql = "UPDATE TBL_PRODUCT SET DELFLAG = 1 "
 						+ "WHERE SEQ = ? AND TBL_COMPANY_SEQ = ?";
 				
 				System.out.print("번호 : ");
