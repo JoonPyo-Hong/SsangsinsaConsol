@@ -73,7 +73,7 @@ public class AdminProductManagement {
 				    	
 
 				         // select문 삽입
-				         String sql = "update TBL_PRODUCT_DETAIL set delflag = 1 where seq = ?"  ;
+				         String sql = "update TBL_PRODUCT_DETAIL set delflag = 1 where TBL_PRODUCT_SEQ = ?"  ;
 				         stat = conn.prepareStatement(sql);
 				         stat.setInt(1, s);
 				         stat.executeUpdate();
