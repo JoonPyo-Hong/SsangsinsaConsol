@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import common.DBUtil;
+
 //회원 로그인
 public class MemberLogin {
 	public void login() {
