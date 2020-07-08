@@ -44,11 +44,11 @@ public class AdminLogin {
 	           if(id.equals(rs.getString(2))&&pw.equals(rs.getString(3))) {
 	        	   control++;
 	        	   int s = Integer.parseInt(rs.getString(1));
-	        	   int d = Integer.parseInt(rs.getString(4));
+	        	 
 	        	   user.setSeq(s);
 	        	   user.setID(rs.getString(2));
 	        	   user.setPWD(rs.getString(3));
-	        	   user.setDELFLAG(d);
+	        	  
 	           }
 	         }
 	         	

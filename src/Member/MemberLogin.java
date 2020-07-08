@@ -1,14 +1,12 @@
-package seller;
+package Member;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
-import common.DBUtil;
-
-//판매자 로그인
-public class SellerLogin {
+//회원 로그인
+public class MemberLogin {
 	public void login() {
 		
 		
@@ -18,7 +16,7 @@ public class SellerLogin {
 		ResultSet rs = null;
 		DBUtil util = new DBUtil();
 		Scanner scan = new Scanner(System.in);
-		SellerUser user = new SellerUser();
+		MemberUser user = new MemberUser();
 		//입력받기
 		System.out.print("아이디 : ");
 		String id = scan.nextLine();
@@ -43,15 +41,15 @@ public class SellerLogin {
 	         while(rs.next()) {
 	           if(id.equals(rs.getString(2))&&pw.equals(rs.getString(3))) {
 	        	   control++;
-//	        	   int s = Integer.parseInt(rs.getString(1));
+	        	   int s = Integer.parseInt(rs.getString(1));
 	        	 
-	        	   user.setSeq(rs.getString(1));
-	        	   user.setCompanyName(rs.getString(2));
+	        	   user.setSeq(s);
+	        	   user.setId(rs.getString(2));
 	        	   user.setPwd(rs.getString(3));
-	        	   user.setAddress(rs.getString(4));
-	        	   user.setOwner(rs.getString(5));
-	        	   user.setTel(rs.getString(6));
-	        	   user.setCompanyNum(rs.getString(7));
+	        	   user.setName(rs.getString(4));
+	        	   user.setAddress(rs.getString(5));
+	        	   user.setRegdate(rs.getString(6));
+	        	   user.setSsn(rs.getString(7));
 	        	  
 	           }
 	         }
