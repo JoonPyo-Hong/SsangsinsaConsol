@@ -48,6 +48,7 @@ public class MemberAs {
 		}
 	}
 
+	// 반품
 	private void returnMoney(String productNum) {
 		while (true) {
 			System.out.println("1. 사이즈 불량\t2. 상품 불량\t3. 단순 변심\t4. 오배송\t0.뒤로기가");
@@ -62,6 +63,7 @@ public class MemberAs {
 				System.out.println("다시 선택하시려면 엔터를 입력해주세요!");
 				scan.nextLine();
 			} else {
+				// 반품 등록
 				insertAS(productNum, "반품", reason[Integer.parseInt(inputReason) -1]);
 				break;
 				
@@ -70,6 +72,7 @@ public class MemberAs {
 		
 	}
 
+	// 입력 유효성 검사
 	private boolean checkInput(List<MemberSaleList> saleList, String productNum) {
 		String pattern = "^[0-9]+$";
 		if(!productNum.matches(pattern)){
@@ -84,6 +87,7 @@ public class MemberAs {
 		
 	}
 
+	// 교환
 	private void change(String productNum) {
 		while (true) {
 			System.out.println("1. 사이즈 불량\t2. 상품 불량\t3. 단순 변심\t4. 오배송\t0.뒤로기가");
@@ -98,6 +102,7 @@ public class MemberAs {
 				System.out.println("다시 선택하시려면 엔터를 입력해주세요!");
 				scan.nextLine();
 			} else {
+				// 교환 등록
 				insertAS(productNum, "교환", reason[Integer.parseInt(inputReason) -1]);
 				break;
 				
@@ -108,6 +113,7 @@ public class MemberAs {
 		
 	}
 
+	// 교환/반품 등록 메소드
 	private void insertAS(String productNum, String type, String reason) {
 		try {
 			conn = util.open();
@@ -128,6 +134,7 @@ public class MemberAs {
 		}		
 	}
 
+	// 리스트를 출력해주는 메소드
 	private List<MemberSaleList> showSaleList(MemberUser memberUser) {
 		List<MemberSaleList> saleList = new ArrayList<MemberSaleList>();
 		try {
