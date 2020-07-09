@@ -1,4 +1,4 @@
-package Member;
+package member;
 
 public class MemberUser {
 	   private int seq; // 회원번호

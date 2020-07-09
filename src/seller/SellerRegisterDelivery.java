@@ -78,12 +78,12 @@ public class SellerRegisterDelivery {
 			rs = pstat.executeQuery();
 			
 			while(rs.next()) {
-				int seq = rs.getInt("SEQ");
-				String productName = rs.getString("NAME");
-				int quantity = rs.getInt("QUANTITY");
-				String regdate = rs.getString("REGDATE");
-				String destination = rs.getString("DESTINATION");
-				DeliveryInfo delivering = new DeliveryInfo(seq, productName, quantity, regdate, destination);
+				DeliveryInfo delivering = new DeliveryInfo(
+						rs.getInt("SEQ"), 
+						rs.getString("NAME"), 
+						rs.getInt("QUANTITY"), 
+						rs.getString("REGDATE"), 
+						rs.getString("DESTINATION"));
 				deliveringList.add(delivering);	// 쿼리문 실행 결과를 arrayList에 저장을 한다.
 			}
 			printList(deliveringList);	// 상품 정보 출력
@@ -154,12 +154,12 @@ public class SellerRegisterDelivery {
 			pstat.setInt(1, sellerUser.getSeq());
 			rs = pstat.executeQuery();
 			while (rs.next()) {
-				int seq = rs.getInt("SEQ");
-				String productName = rs.getString("NAME");
-				int quantity = rs.getInt("QUANTITY");
-				String regdate = rs.getString("REGDATE");
-				String destination = rs.getString("DESTINATION");
-				DeliveryInfo notDelivered = new DeliveryInfo(seq, productName, quantity, regdate, destination);
+				DeliveryInfo notDelivered = new DeliveryInfo(
+						rs.getInt("SEQ"), 
+						rs.getString("NAME"), 
+						rs.getInt("QUANTITY"), 
+						rs.getString("REGDATE"), 
+						rs.getString("DESTINATION"));
 				notDeliveredList.add(notDelivered);
 			}
 			// 배송 전 목록 출력
