@@ -39,7 +39,7 @@ public class SellerLogin {
 			stat = conn.createStatement();
 
 			// select문 삽입
-			String sql = "select * from TBL_ADMIN";
+			String sql = "select * from tbl_company";
 			rs = stat.executeQuery(sql);
 
 			// select문 마지막행까지 반복

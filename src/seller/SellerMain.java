@@ -15,7 +15,7 @@ public class SellerMain {
 			System.out.println("1. 상품 관리");
 			System.out.println("2. 리뷰 관리 (공사중)");
 			System.out.println("3. 배송 등록");
-			System.out.println("4. 로그 아웃");
+			System.out.println("0. 로그 아웃");
 			System.out.println("=============");
 			System.out.print("번호 : ");
 			String index = scan.nextLine();
@@ -35,10 +35,12 @@ public class SellerMain {
 				
 			} else if (index.equals("3")) {
 				// 배송 등록 페이지로 이동
-				System.out.println("내꺼 아님;\n");
+//				System.out.println("내꺼 아님;\n");
+				SellerRegisterDelivery sellerRegisterDelivery = new SellerRegisterDelivery();
+				sellerRegisterDelivery.SellerDeliveryMain(seller);
 				continue;
 				
-			} else if (index.equals("4")) {
+			} else if (index.equals("0")) {
 				// 로그아웃
 				System.out.printf("%s님 이용해 주셔서 감사합니다.\n", seller.getCompanyName());
 				break;

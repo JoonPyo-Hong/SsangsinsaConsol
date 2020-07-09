@@ -19,9 +19,10 @@ public class MemberAs {
 	public void memberAsMain(MemberUser memberUser) {
 		while (true) {
 
-			List<MemberSaleList> saleList = showSaleList(memberUser);
+			List<MemberSaleList> saleList = showSaleList(memberUser);	// 상품 목록을 저장해주는 ArrayList
 			System.out.print("교환/배송을 할 상품 번호를 입력해주세요 : ");
 			String productNum = scan.nextLine();
+			// 유효성 검사 후 목록 출력
 			if(checkInput(saleList, productNum)) {
 				System.out.println("=================");
 				System.out.println("1. 교환하기");
@@ -31,8 +32,10 @@ public class MemberAs {
 				System.out.print("입력 : ");
 				String input = scan.nextLine();
 				if (input.equals("1")) {
-					change(productNum);
+					// 교환
+					change(productNum);	
 				} else if (input.equals("2")) {
+					// 반품
 					returnMoney(productNum);
 				} else if(input.equals("0")){
 					break;

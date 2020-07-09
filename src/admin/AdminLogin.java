@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 import common.DBUtil;
+import member.MemberMain;
 
 //관리자 로그인
 public class AdminLogin {
@@ -59,7 +60,8 @@ public class AdminLogin {
 	        	System.out.println("일치하는 아이디/비밀번호가 없습니다.");
 	        }else if(control>0) {
 	        	//로그인 성공후 화면으로 이동
-	        	
+	        	AdminMain adminMain = new AdminMain();
+	        	adminMain.adminMain(user);
 	        }
 	         // 예외 처리
 	      	} catch (Exception e) {
