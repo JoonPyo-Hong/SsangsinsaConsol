@@ -9,6 +9,11 @@ import common.DBUtil;
 
 //회원 로그인
 public class MemberLogin {
+//	public static void main(String[] args) {
+//		MemberLogin memberlogin = new MemberLogin();
+//		memberlogin.login();
+//	}
+	
 	public void login() {
 		
 		
@@ -19,7 +24,9 @@ public class MemberLogin {
 		DBUtil util = new DBUtil();
 		Scanner scan = new Scanner(System.in);
 		MemberUser user = new MemberUser();
+		
 		//입력받기
+		System.out.println("〓〓〓〓〓〓〓〓〓회원 로그인〓〓〓〓〓〓〓〓〓");
 		System.out.print("아이디 : ");
 		String id = scan.nextLine();
 		System.out.print("비밀번호 : ");
@@ -36,7 +43,7 @@ public class MemberLogin {
 	         stat = conn.createStatement();
 
 	         // select문 삽입
-	         String sql = "select * from TBL_ADMIN";
+	         String sql = "select * from TBL_MEMBER";
 	         rs = stat.executeQuery(sql);
 	         
 	         // select문 마지막행까지 반복
@@ -63,6 +70,8 @@ public class MemberLogin {
 	        	System.out.println("일치하는 아이디/비밀번호가 없습니다.");
 	        }else if(control>0) {
 	        	//로그인 성공후 화면으로 이동
+	        	MemberMain main = new MemberMain(); 
+	        	main.memberMain(user);
 	        	
 	        }
 	         // 예외 처리

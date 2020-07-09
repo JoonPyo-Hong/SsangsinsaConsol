@@ -1,74 +1,75 @@
 package member;
 
 public class MemberUser {
-	   private int seq; // 회원번호
-	   private String id;   // 아이디
-	   private String pwd;   // 비밀번호
-	   private String name;   // 이름
-	   private String address;   // 주소
-	   private String regdate;   // 가입일
-	   private String ssn;   //주민번호
 
-	   public int getSeq() {
-	      return seq;
-	   }
+	private int seq; // 회원번호
+	private String id;	// 아이디
+	private String pwd;	// 비밀번호
+	private String name;	// 이름
+	private String address;	// 주소
+	private String regdate;	// 가입일
+	private String ssn;	//주민번호
 
-	   public void setSeq(int seq) {
-	      this.seq = seq;
-	   }
+	public int getSeq() {
+		return seq;
+	}
 
-	   
-	   public String getId() {   
-	      return id;
-	   }
+	public void setSeq(int seq) {
+		this.seq = seq;
+	}
 
-	   public void setId(String id) {
-	      this.id = id;
-	   }
+	
+	public String getId() {	
+		return id;
+	}
 
-	   
-	   public String getPwd() {
-	      return pwd;
-	   }
+	public void setId(String id) {
+		this.id = id;
+	}
 
-	   public void setPwd(String pwd) {
-	      this.pwd = pwd;
-	   }
+	
+	public String getPwd() {
+		return pwd;
+	}
 
-	   
-	   public String getName() {
-	      return name;
-	   }
+	public void setPwd(String pwd) {
+		this.pwd = pwd;
+	}
 
-	   public void setName(String name) {
-	      this.name = name;
-	   }
+	
+	public String getName() {
+		return name;
+	}
 
-	   
-	   public String getAddress() {
-	      return address;
-	   }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-	   public void setAddress(String address) {
-	      this.address = address;
-	   }
+	
+	public String getAddress() {
+		return address;
+	}
 
-	   
-	   public String getRegdate() {
-	      return regdate;
-	   }
+	public void setAddress(String address) {
+		this.address = address;
+	}
 
-	   public void setRegdate(String regdate) {
-	      this.regdate = regdate;
-	   }
+	
+	public String getRegdate() {
+		return regdate;
+	}
 
-	   
-	   public String getSsn() {
-	      return ssn;
-	   }
+	public void setRegdate(String regdate) {
+		this.regdate = regdate;
+	}
 
-	   public void setSsn(String ssn) {
-	      this.ssn = ssn;
-	   }
+	
+	public String getSsn() {
+		return ssn;
+	}
+
+	public void setSsn(String ssn) {
+		this.ssn = ssn;
+	}
 
 }
