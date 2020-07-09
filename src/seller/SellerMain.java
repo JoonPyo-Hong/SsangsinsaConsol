@@ -38,7 +38,6 @@ public class SellerMain {
 //				System.out.println("내꺼 아님;\n");
 				SellerRegisterDelivery sellerRegisterDelivery = new SellerRegisterDelivery();
 				sellerRegisterDelivery.SellerDeliveryMain(seller);
-				continue;
 				
 			} else if (index.equals("0")) {
 				// 로그아웃

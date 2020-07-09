@@ -3,8 +3,9 @@ package seller;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -17,7 +18,8 @@ public class SellerProductManagement { // 1. 상품관리
 	ResultSet rs = null;
 	DBUtil util = new DBUtil();
 	Scanner scan = new Scanner(System.in);
-	Map<String, String> map = new HashMap<String, String>();
+	Map<String, String> map = new HashMap<String, String>(); //교환/반품시 번호 체크용
+	List<ProductInfo> list = new ArrayList<ProductInfo>(); //전체 상품 정보 저장
 
 	public void sellerProduct(SellerUser seller) {
 		
@@ -82,9 +84,11 @@ public class SellerProductManagement { // 1. 상품관리
 				
 				System.out.println("교환 / 반품 목록입니다.\n");
 				
-				String sql = "SELECT SUP.SEQ, P.NAME, SL.QUANTITY, S.SALEDDATE, SUP.REGDATE, SUP.TYPE, SUP.REASON, S.SEQ AS SALESEQ "
-						+ "FROM TBL_SUPPORT SUP INNER JOIN TBL_SALE S ON SUP.TBL_SALE_SEQ = S.SEQ INNER JOIN TBL_SALELIST SL "
-						+ "ON S.SEQ = SL.TBL_SALE_SEQ INNER JOIN TBL_PRODUCT P ON SL.TBL_PRODUCT_SEQ = P.SEQ "
+				String sql = "SELECT SUP.SEQ, P.NAME, SL.QUANTITY, S.SALEDDATE, SUP.REGDATE, SUP.TYPE, "
+						+ "SUP.REASON, DL.STATUS FROM TBL_SUPPORT SUP INNER JOIN TBL_SALE S ON "
+						+ "SUP.TBL_SALE_SEQ = S.SEQ INNER JOIN TBL_SALELIST SL ON S.SEQ = SL.TBL_SALE_SEQ "
+						+ "INNER JOIN TBL_PRODUCT P ON SL.TBL_PRODUCT_SEQ = P.SEQ INNER JOIN "
+						+ "TBL_DELIVERY_LIST DL ON SUP.SEQ = DL.TBL_SUPPORT_SEQ "
 						+ "WHERE P.TBL_COMPANY_SEQ = ? AND SUP.DELFLAG = 0 ORDER BY SUP.REGDATE";
 				
 				pstat = conn.prepareStatement(sql);
@@ -101,9 +105,10 @@ public class SellerProductManagement { // 1. 상품관리
 					System.out.printf("판매날짜 : %s\n", rs.getString("saleddate").substring(0, 10).trim());
 					System.out.printf("신청날짜 : %s\n", rs.getString("regdate").substring(0, 10).trim());
 					System.out.printf("타입 : %s\n", rs.getString("type"));
-					System.out.printf("사유 : %s\n\n", rs.getString("reason"));
+					System.out.printf("사유 : %s\n", rs.getString("reason"));
+					System.out.printf("상태 : %s\n\n", rs.getString("status"));
 					
-					map.put(rs.getString("seq"), rs.getString("saleseq"));
+					map.put(rs.getString("seq"), rs.getString("status"));						
 					
 				}
 				
@@ -114,12 +119,24 @@ public class SellerProductManagement { // 1. 상품관리
 				System.out.print("번호 : ");
 				String num = scan.nextLine();
 				
-				sql = "UPDATE TBL_DELIVERY_LIST SET STATUS = ? WHERE DELFLAG = 0 AND TBL_SALE_SEQ = ?";
+				if (!map.containsKey(num)) {
+					System.out.println("\n없는 번호입니다.\n다시 입력하려면 엔터를 눌러주세요.");
+					scan.nextLine();
+					continue;
+				}
+				
+				if (map.get(num).equals("배송완료")) {
+					System.out.println("\n이미 완료된 배송입니다.\n다시 입력하려면 엔터를 눌러주세요.");
+					scan.nextLine();
+					continue;
+				}
+				
+				sql = "UPDATE TBL_DELIVERY_LIST SET STATUS = ? WHERE DELFLAG = 0 AND TBL_SUPPORT_SEQ = ?";
 				
 				pstat = conn.prepareStatement(sql);
 				
 				pstat.setString(1, "배송완료");
-				pstat.setString(2, map.get(num));
+				pstat.setString(2, num);
 				
 				pstat.executeQuery();
 				
@@ -131,8 +148,6 @@ public class SellerProductManagement { // 1. 상품관리
 				
 			} catch (Exception e) {
 //				e.printStackTrace();
-				System.out.println("Error!!\n정확한 정보를 입력해 주세요.\n");
-				
 			}
 		
 		}
@@ -158,16 +173,31 @@ public class SellerProductManagement { // 1. 상품관리
 						+ "WHERE SEQ = ? AND TBL_COMPANY_SEQ = ?";
 				
 				System.out.print("번호 : ");
-				String num = scan.nextLine();
+				int num = scan.nextInt();
+				scan.nextLine();
+				
+				int count = 0;
+				for (int i=0; i<list.size(); i++) {
+					if (list.get(i).getSeq() == num) {
+						count++;
+						break;
+					}
+				}
+				
+				if (count == 0) {
+					System.out.println("\n없는 번호입니다.\n다시 입력하려면 엔터를 눌러주세요.");
+					scan.nextLine();
+					continue;
+				}
 				
 				pstat = conn.prepareStatement(sql);
 				
-				pstat.setString(1, num);
+				pstat.setInt(1, num);
 				pstat.setInt(2, seller.getSeq());
 				
 				pstat.executeQuery();
 				
-				System.out.printf("\n%s번 상품이 삭제되었습니다.\n\n", num);
+				System.out.printf("\n%d번 상품이 삭제되었습니다.\n\n", num);
 				
 				pstat.close();			
 				conn.close();
@@ -176,6 +206,8 @@ public class SellerProductManagement { // 1. 상품관리
 			} catch (Exception e) {
 //				e.printStackTrace();
 				System.out.println("Error!!\n정확한 정보를 입력해 주세요.\n");
+				scan.nextLine();
+				continue;
 			}
 		
 		}
@@ -200,7 +232,22 @@ public class SellerProductManagement { // 1. 상품관리
 				String sql = "UPDATE TBL_PRODUCT SET NAME = ?, PRICE = ? WHERE SEQ = ? AND TBL_COMPANY_SEQ = ? AND DELFLAG = 0";
 				
 				System.out.print("번호 : ");
-				String num = scan.nextLine();
+				int num = scan.nextInt();
+				scan.nextLine();
+				
+				int count = 0;
+				for (int i=0; i<list.size(); i++) {
+					if (list.get(i).getSeq() == num) {
+						count++;
+						break;
+					}
+				}
+				
+				if (count == 0) {
+					System.out.println("\n없는 번호입니다.\n다시 입력하려면 엔터를 눌러주세요.");
+					scan.nextLine();
+					continue;
+				}
 				
 				System.out.println("\n수정 할 정보를 입력해 주세요.");
 				
@@ -208,18 +255,19 @@ public class SellerProductManagement { // 1. 상품관리
 				String productName = scan.nextLine();
 				
 				System.out.print("가격 : ");
-				String productPrice = scan.nextLine();
+				int productPrice = scan.nextInt();
+				scan.nextLine();
 				
 				pstat = conn.prepareStatement(sql);
 				
 				pstat.setString(1, productName);
-				pstat.setString(2, productPrice);
-				pstat.setString(3, num);
+				pstat.setInt(2, productPrice);
+				pstat.setInt(3, num);
 				pstat.setInt(4, seller.getSeq());
 				
 				pstat.executeQuery();
 				
-				System.out.printf("\n%s번 상품이 수정되었습니다.\n\n", num);
+				System.out.printf("\n%d번 상품이 수정되었습니다.\n\n", num);
 				
 				pstat.close();			
 				conn.close();
@@ -228,6 +276,8 @@ public class SellerProductManagement { // 1. 상품관리
 			} catch (Exception e) {
 //				e.printStackTrace();
 				System.out.println("Error!!\n정확한 정보를 입력해 주세요.\n");
+				scan.nextLine();
+				continue;
 			}
 		
 		}
@@ -270,12 +320,13 @@ public class SellerProductManagement { // 1. 상품관리
 						String productName = scan.nextLine();
 						
 						System.out.print("가격 : ");
-						String productPrice = scan.nextLine();
+						int productPrice = scan.nextInt();
+						scan.nextLine();
 						
 						pstat = conn.prepareStatement(sql);
 						
 						pstat.setString(1, productName);
-						pstat.setString(2, productPrice);
+						pstat.setInt(2, productPrice);
 						pstat.setInt(3, seller.getSeq());
 						
 						pstat.executeQuery();
@@ -288,7 +339,9 @@ public class SellerProductManagement { // 1. 상품관리
 						
 					} catch (Exception e) {
 //						e.printStackTrace();
-						System.out.println("Error!!\n정확한 정보를 입력해 주세요.\n");
+						System.out.println("Error!!\n정확한 정보를 입력해 주세요.");
+						scan.nextLine();
+						continue;
 					}
 					
 				}
@@ -307,7 +360,8 @@ public class SellerProductManagement { // 1. 상품관리
 								+ "VALUES (?, ?, ?, DEFAULT)";
 						
 						System.out.print("번호 : ");
-						String num = scan.nextLine();
+						int num = scan.nextInt();
+						scan.nextLine();
 						
 						System.out.println("\n등록 할 정보를 입력해 주세요.");
 						
@@ -315,13 +369,14 @@ public class SellerProductManagement { // 1. 상품관리
 						String size = scan.nextLine();
 						
 						System.out.print("수량(숫자만 입력해 주세요) : ");
-						String quantity = scan.nextLine();
+						int quantity = scan.nextInt();
+						scan.nextLine();
 						
 						pstat = conn.prepareStatement(sql);
 						
-						pstat.setString(1, num);
+						pstat.setInt(1, num);
 						pstat.setString(2, size.toUpperCase());
-						pstat.setString(3, quantity);
+						pstat.setInt(3, quantity);
 						
 						pstat.executeQuery();
 						
@@ -333,7 +388,9 @@ public class SellerProductManagement { // 1. 상품관리
 						
 					} catch (Exception e) {
 //						e.printStackTrace();
-						System.out.println("Error!!\n정확한 정보를 입력해 주세요.\n");
+						System.out.println("Error!!\n정확한 정보를 입력해 주세요.");
+						scan.nextLine();
+						continue;
 					}
 					
 				}
@@ -359,6 +416,8 @@ public class SellerProductManagement { // 1. 상품관리
 	
 	private void check(SellerUser seller) { // 상품 전체 출력
 		
+		
+		
 		while(true) {
 		
 			try {
@@ -380,12 +439,23 @@ public class SellerProductManagement { // 1. 상품관리
 				
 				while (rs.next()) {
 					
+					ProductInfo product = new ProductInfo();
+					
 					System.out.printf("번호 : %s\n", rs.getString("seq"));
 					System.out.printf("상품명 : %s\n", rs.getString("name"));
 					System.out.printf("가격 : %s\n", rs.getString("price"));
 					System.out.printf("등록일 : %s\n", rs.getString("regdate").substring(0, 10).trim());
 					System.out.printf("사이즈 : %s\n", rs.getString("product_size"));
 					System.out.printf("수량 : %s\n\n", rs.getString("quantity"));
+					
+					product.setSeq(rs.getInt("seq"));
+					product.setName(rs.getString("name"));
+					product.setPrice(rs.getInt("price"));
+					product.setRegdate(rs.getString("regdate").substring(0, 10).trim());
+					product.setSize(rs.getString("product_size"));
+					product.setQuantity(rs.getInt("quantity"));
+					
+					list.add(product);
 					
 				}
 				
@@ -396,7 +466,7 @@ public class SellerProductManagement { // 1. 상품관리
 				
 			} catch (Exception e) {
 //				e.printStackTrace();
-				System.out.println("Error!!\n");
+				System.out.println("Error!!\n 상품조회에 실패하셨습니다.\n");
 				break;
 			}
 		
